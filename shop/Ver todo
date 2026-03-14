@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ver todo | SL4</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #f6f7fb;
+      color: #1a1f2e;
+      line-height: 1.4;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .container {
+      width: min(1200px, 92%);
+      margin: 0 auto;
+    }
+
+    /* NAV */
+    .navbar {
+      background: #3e4046;
+      color: white;
+      padding: 20px 0;
+    }
+
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .logo {
+      font-size: 56px;
+      font-weight: 800;
+      letter-spacing: 1px;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      flex-wrap: wrap;
+    }
+
+    .nav-pill {
+      background: #1f2229;
+      padding: 14px 28px;
+      border-radius: 999px;
+      font-weight: 700;
+    }
+
+    .nav-link {
+      font-size: 20px;
+      color: #f0f0f0;
+    }
+
+    /* HERO */
+    .hero {
+      background: white;
+      padding: 56px 0 36px;
+      text-align: center;
+      border-bottom: 1px solid #e7eaf3;
+    }
+
+    .hero h1 {
+      font-size: 52px;
+      margin-bottom: 10px;
+    }
+
+    .hero p {
+      font-size: 24px;
+      color: #5a6275;
+      margin-bottom: 26px;
+    }
+
+    .btn-primary {
+      background: #3d73c9;
+      color: white;
+      border: none;
+      padding: 16px 34px;
+      border-radius: 14px;
+      font-size: 18px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      opacity: 0.95;
+    }
+
+    /* MAIN LAYOUT */
+    .builder {
+      padding: 40px 0 60px;
+    }
+
+    .builder-grid {
+      display: grid;
+      grid-template-columns: 1.8fr 1fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    .section-title {
+      font-size: 42px;
+      margin-bottom: 10px;
+    }
+
+    .section-subtitle {
+      font-size: 18px;
+      color: #5f6678;
+      margin-bottom: 28px;
+      max-width: 700px;
+    }
+
+    /* CATEGORY BUTTONS */
+    .category-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(220px, 1fr));
+      gap: 18px;
+      margin-bottom: 28px;
+    }
+
+    .category-card {
+      background: white;
+      border: 1px solid #dfe5f0;
+      border-radius: 18px;
+      padding: 22px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      min-height: 110px;
+      transition: 0.2s ease;
+    }
+
+    .category-card:hover {
+      border-color: #aac1ef;
+      transform: translateY(-2px);
+    }
+
+    .category-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .icon-box {
+      width: 54px;
+      height: 54px;
+      border-radius: 14px;
+      background: #d9e4f7;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+    }
+
+    .category-name {
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .category-arrow {
+      font-size: 26px;
+      color: #2f3d57;
+    }
+
+    /* PRODUCT GROUPS */
+    .product-group {
+      display: none;
+      margin-bottom: 22px;
+      background: #ffffff;
+      border: 1px solid #e2e8f3;
+      border-radius: 20px;
+      padding: 24px;
+    }
+
+    .product-group.active {
+      display: block;
+    }
+
+    .product-group h3 {
+      font-size: 26px;
+      margin-bottom: 18px;
+    }
+
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(240px, 1fr));
+      gap: 18px;
+    }
+
+    .product-card {
+      border: 1px solid #dfe5f0;
+      border-radius: 18px;
+      padding: 18px;
+      background: #fff;
+    }
+
+    .product-top {
+      display: flex;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+
+    .product-image {
+      width: 82px;
+      height: 110px;
+      background: linear-gradient(180deg, #2b2d34, #0f1116);
+      border-radius: 14px;
+      flex-shrink: 0;
+    }
+
+    .product-meta h4 {
+      font-size: 22px;
+      margin-bottom: 6px;
+    }
+
+    .product-meta p {
+      color: #5e6678;
+      font-size: 15px;
+      margin-bottom: 10px;
+    }
+
+    .rating {
+      color: #f3b63f;
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
+
+    .price {
+      font-size: 28px;
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+
+    .variant-row,
+    .qty-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+
+    .chip {
+      border: 1px solid #cfd7e6;
+      background: #f5f7fc;
+      padding: 8px 12px;
+      border-radius: 10px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .chip.active {
+      background: #3d73c9;
+      color: white;
+      border-color: #3d73c9;
+    }
+
+    .qty-box {
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid #cfd7e6;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .qty-btn,
+    .qty-number {
+      padding: 8px 14px;
+      background: white;
+      border: none;
+      font-size: 16px;
+    }
+
+    .add-btn {
+      width: 100%;
+      border: none;
+      background: #3d73c9;
+      color: white;
+      padding: 13px;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    /* SIDE PANEL */
+    .bundle-panel {
+      background: #dce9f7;
+      border-radius: 24px;
+      padding: 24px;
+      position: sticky;
+      top: 24px;
+    }
+
+    .bundle-panel h3 {
+      text-align: center;
+      color: #2d5ea9;
+      font-size: 28px;
+      margin-bottom: 16px;
+    }
+
+    .progress-line {
+      height: 8px;
+      background: white;
+      border-radius: 999px;
+      margin-bottom: 16px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      width: 0%;
+      height: 100%;
+      background: #3d73c9;
+      border-radius: 999px;
+      transition: width 0.25s ease;
+    }
+
+    .progress-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      color: #456;
+      margin-bottom: 20px;
+    }
+
+    .bundle-slots {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-bottom: 18px;
+      max-height: 360px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .slot {
+      background: white;
+      border-radius: 16px;
+      padding: 14px;
+      border: 1px dashed #c5d7ef;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      min-height: 86px;
+    }
+
+    .slot-square {
+      width: 52px;
+      height: 52px;
+      border-radius: 12px;
+      border: 1px dashed #c7d3e7;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      color: #8aa0bc;
+      flex-shrink: 0;
+    }
+
+    .slot-text {
+      font-size: 15px;
+      color: #4c5568;
+    }
+
+    .slot.filled {
+      border-style: solid;
+    }
+
+    .slot.filled .slot-square {
+      background: #eef4fd;
+      border-style: solid;
+      font-size: 16px;
+      color: #2d5ea9;
+      font-weight: 700;
+    }
+
+    .bundle-footer {
+      background: #eef3fa;
+      padding: 14px;
+      border-radius: 16px;
+      margin-bottom: 14px;
+      font-size: 15px;
+      color: #516179;
+      text-align: center;
+    }
+
+    .cart-btn {
+      width: 100%;
+      border: none;
+      background: #bfc9d8;
+      color: white;
+      padding: 15px;
+      border-radius: 14px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: not-allowed;
+    }
+
+    .cart-btn.enabled {
+      background: #3d73c9;
+      cursor: pointer;
+    }
+
+    /* BASES */
+    .bases {
+      padding: 10px 0 70px;
+    }
+
+    .bases-header {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+
+    .bases-header h2 {
+      font-size: 42px;
+      margin-bottom: 10px;
+    }
+
+    .bases-header p {
+      font-size: 20px;
+      color: #647089;
+    }
+
+    .bases-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(220px, 1fr));
+      gap: 20px;
+    }
+
+    .base-card {
+      background: white;
+      border: 1px solid #dfe5f0;
+      border-radius: 20px;
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 220px;
+    }
+
+    .base-card h3 {
+      font-size: 22px;
+      margin-bottom: 14px;
+    }
+
+    .base-card ul {
+      padding-left: 18px;
+      color: #4f586c;
+      margin-bottom: 20px;
+    }
+
+    .base-card li {
+      margin-bottom: 8px;
+    }
+
+    .footer-copy {
+      padding: 10px 0 80px;
+      text-align: center;
+    }
+
+    .footer-copy h2 {
+      font-size: 40px;
+      margin-bottom: 10px;
+    }
+
+    .footer-copy p {
+      font-size: 21px;
+      color: #5f6678;
+    }
+
+    @media (max-width: 992px) {
+      .builder-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .bundle-panel {
+        position: static;
+      }
+
+      .bases-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .logo {
+        font-size: 42px;
+      }
+
+      .hero h1,
+      .section-title,
+      .bases-header h2,
+      .footer-copy h2 {
+        font-size: 34px;
+      }
+
+      .category-grid,
+      .products-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .nav-links {
+        gap: 16px;
+      }
+
+      .nav-link {
+        font-size: 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="navbar">
+    <div class="container nav-inner">
+      <div class="logo">SL4</div>
+      <nav class="nav-links">
+        <a href="#" class="nav-pill">Shop ▾</a>
+        <a href="#" class="nav-link">Paquetes</a>
+        <a href="#" class="nav-link">Blog</a>
+        <a href="#" class="nav-link">Nosotros</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="container">
+      <h1>Arma tu kit</h1>
+      <p>Tu kit. Tus reglas.</p>
+      <button class="btn-primary" onclick="scrollToBuilder()">Empezar a armar</button>
+    </div>
+  </section>
+
+  <main class="builder" id="builder">
+    <div class="container builder-grid">
+      
+      <section>
+        <h2 class="section-title">Elige tus productos</h2>
+        <p class="section-subtitle">
+          Combina como quieras. El descuento se aplica automáticamente. 
+          Puedes abrir una o varias categorías al mismo tiempo para comparar opciones.
+        </p>
+
+        <div class="category-grid">
+          <div class="category-card" onclick="toggleCategory('proteina')">
+            <div class="category-left">
+              <div class="icon-box">🥤</div>
+              <div class="category-name">Proteína</div>
+            </div>
+            <div class="category-arrow">⌄</div>
+          </div>
+
+          <div class="category-card" onclick="toggleCategory('creatina')">
+            <div class="category-left">
+              <div class="icon-box">🧪</div>
+              <div class="category-name">Creatina</div>
+            </div>
+            <div class="category-arrow">⌄</div>
+          </div>
+
+          <div class="category-card" onclick="toggleCategory('preworkout')">
+            <div class="category-left">
+              <div class="icon-box">⚡</div>
+              <div class="category-name">Preworkout</div>
+            </div>
+            <div class="category-arrow">⌄</div>
+          </div>
+
+          <div class="category-card" onclick="toggleCategory('bcaas')">
+            <div class="category-left">
+              <div class="icon-box">💊</div>
+              <div class="category-name">BCAAs</div>
+            </div>
+            <div class="category-arrow">⌄</div>
+          </div>
+        </div>
+
+        <!-- PROTEINA -->
+        <div class="product-group" id="proteina">
+          <h3>Proteína</h3>
+          <div class="products-grid">
+            <article class="product-card">
+              <div class="product-top">
+                <div class="product-image"></div>
+                <div class="product-meta">
+                  <div class="rating">★★★★★ (412)</div>
+                  <h4>SL4 ISO ZERO</h4>
+                  <p>75 servicios · Digestión ligera</p>
+                  <div class="price">$599</div>
+                </div>
+              </div>
+              <div class="variant-row">
+                <button class="chip active">Vainilla</button>
+                <button class="chip">Chocolate</button>
+              </div>
+              <button class="add-btn" onclick="addToBundle('SL4 ISO ZERO')">AGREGAR</button>
+            </article>
+
+            <article class="product-card">
+              <div class="product-top">
+                <div class="product-image"></div>
+                <div class="product-meta">
+                  <div class="rating">★★★★★ (280)</div>
+                  <h4>Whey Protein</h4>
+                  <p>Proteína completa · Sabor natural</p>
+                  <div class="price">$549</div>
+                </div>
+              </div>
+              <div class="variant-row">
+                <button class="chip active">Fresa</button>
+                <button class="chip">Choco-avellana</button>
+              </div>
+              <button class="add-btn" onclick="addToBundle('Whey Protein')">AGREGAR</button>
+            </article>
+          </div>
+        </div>
+
+        <!-- CREATINA -->
+        <div class="product-group" id="creatina">
+          <h3>Creatina</h3>
+          <div class="products-grid">
+            <article class="product-card">
+              <div class="product-top">
+                <div class="product-image"></div>
+                <div class="product-meta">
+                  <div class="rating">★★★★★ (80)</div>
+                  <h4>SL4 Creatina Micronizada</h4>
+                  <p>60 servs · Fuerza y energía</p>
+                  <div class="price">$499</div>
+                </div>
+              </div>
+              <div class="qty-row">
+                <div class="qty-box">
+                  <button class="qty-btn">−</button>
+                  <span class="qty-number">1</span>
+                  <button class="qty-btn">+</button>
+                </div>
+              </div>
+              <button class="add-btn" onclick="addToBundle('SL4 Creatina Micronizada')">AGREGAR</button>
+            </article>
+          </div>
+        </div>
+
+        <!-- PREWORKOUT -->
+        <div class="product-group" id="preworkout">
+          <h3>Preworkout</h3>
+          <div class="products-grid">
+            <article class="product-card">
+              <div class="product-top">
+                <div class="product-image"></div>
+                <div class="product-meta">
+                  <div class="rating">★★★★★ (30)</div>
+                  <h4>PRE-RUSH!</h4>
+                  <p>30 servs · Energía y enfoque</p>
+                  <div class="price">$499</div>
+                </div>
+              </div>
+              <div class="variant-row">
+                <button class="chip active">Fruta Roja</button>
+                <button class="chip">Mango</button>
+              </div>
+              <button class="add-btn" onclick="addToBundle('PRE-RUSH!')">AGREGAR</button>
+            </article>
+          </div>
+        </div>
+
+        <!-- BCAAS -->
+        <div class="product-group" id="bcaas">
+          <h3>BCAAs</h3>
+          <div class="products-grid">
+            <article class="product-card">
+              <div class="product-top">
+                <div class="product-image"></div>
+                <div class="product-meta">
+                  <div class="rating">★★★★★ (20)</div>
+                  <h4>BCAAS SL4</h4>
+                  <p>30 servs · Energía y gasolina</p>
+                  <div class="price">$499</div>
+                </div>
+              </div>
+              <div class="variant-row">
+                <button class="chip active">Mora Azul</button>
+                <button class="chip">Limonada</button>
+              </div>
+              <button class="add-btn" onclick="addToBundle('BCAAS SL4')">AGREGAR</button>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <aside class="bundle-panel">
+        <h3>TU BUNDLE <span id="bundleCount">0</span>/5</h3>
+        <div class="progress-line">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <div class="progress-labels">
+          <span>3 prod · 15%</span>
+          <span>4 prod · 20%</span>
+          <span>5 prod · 25%</span>
+        </div>
+
+        <div class="bundle-slots" id="bundleSlots">
+          <div class="slot"><div class="slot-square">+</div><div class="slot-text">Elige un producto</div></div>
+          <div class="slot"><div class="slot-square">+</div><div class="slot-text">Elige un producto</div></div>
+          <div class="slot"><div class="slot-square">+</div><div class="slot-text">Elige un producto</div></div>
+          <div class="slot"><div class="slot-square">+</div><div class="slot-text">Elige un producto</div></div>
+          <div class="slot"><div class="slot-square">+</div><div class="slot-text">Elige un producto</div></div>
+        </div>
+
+        <div class="bundle-footer" id="discountMessage">
+          Agrega productos para desbloquear descuentos automáticos.
+        </div>
+
+        <button class="cart-btn" id="cartBtn">Agregar a carrito</button>
+      </aside>
+    </div>
+  </main>
+
+  <section class="bases">
+    <div class="container">
+      <div class="bases-header">
+        <h2>¿No sabes por dónde empezar?</h2>
+        <p>Empieza con una base.</p>
+      </div>
+
+      <div class="bases-grid">
+        <article class="base-card">
+          <div>
+            <h3>⚡ Rendimiento base</h3>
+            <ul>
+              <li>Proteína</li>
+              <li>Creatina</li>
+              <li>Preworkout</li>
+            </ul>
+          </div>
+          <button class="btn-primary" onclick="loadBase(['SL4 ISO ZERO','SL4 Creatina Micronizada','PRE-RUSH!'])">Usar esta base</button>
+        </article>
+
+        <article class="base-card">
+          <div>
+            <h3>🍃 Recuperación total</h3>
+            <ul>
+              <li>Proteína</li>
+              <li>Creatina</li>
+              <li>BCAAs</li>
+            </ul>
+          </div>
+          <button class="btn-primary" onclick="loadBase(['SL4 ISO ZERO','SL4 Creatina Micronizada','BCAAS SL4'])">Usar esta base</button>
+        </article>
+
+        <article class="base-card">
+          <div>
+            <h3>⏱ Resistencia</h3>
+            <ul>
+              <li>Creatina</li>
+              <li>BCAAs</li>
+              <li>Preworkout</li>
+            </ul>
+          </div>
+          <button class="btn-primary" onclick="loadBase(['SL4 Creatina Micronizada','BCAAS SL4','PRE-RUSH!'])">Usar esta base</button>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="footer-copy">
+    <div class="container">
+      <h2>Tu cuerpo no usa suplementos sueltos.</h2>
+      <p>Usa sistemas.</p>
+    </div>
+  </section>
+
+  <script>
+    const bundle = [];
+    const maxItems = 5;
+
+    function scrollToBuilder() {
+      document.getElementById('builder').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function toggleCategory(categoryId) {
+      const section = document.getElementById(categoryId);
+      section.classList.toggle('active');
+    }
+
+    function addToBundle(productName) {
+      if (bundle.length >= maxItems) {
+        alert('Tu bundle ya tiene 5 productos.');
+        return;
+      }
+
+      bundle.push(productName);
+      renderBundle();
+    }
+
+    function loadBase(products) {
+      bundle.length = 0;
+      products.forEach(product => bundle.push(product));
+      renderBundle();
+      document.getElementById('builder').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function getDiscountText(count) {
+      if (count >= 5) return '25% de descuento desbloqueado.';
+      if (count >= 4) return '20% de descuento desbloqueado.';
+      if (count >= 3) return '15% de descuento desbloqueado.';
+      return 'Agrega productos para desbloquear descuentos automáticos.';
+    }
+
+    function renderBundle() {
+      const slotsContainer = document.getElementById('bundleSlots');
+      const countEl = document.getElementById('bundleCount');
+      const progressFill = document.getElementById('progressFill');
+      const discountMessage = document.getElementById('discountMessage');
+      const cartBtn = document.getElementById('cartBtn');
+
+      countEl.textContent = bundle.length;
+      progressFill.style.width = `${(bundle.length / maxItems) * 100}%`;
+      discountMessage.textContent = getDiscountText(bundle.length);
+
+      slotsContainer.innerHTML = '';
+
+      for (let i = 0; i < maxItems; i++) {
+        const slot = document.createElement('div');
+        slot.className = 'slot';
+
+        if (bundle[i]) {
+          slot.classList.add('filled');
+          slot.innerHTML = `
+            <div class="slot-square">${i + 1}</div>
+            <div class="slot-text"><strong>${bundle[i]}</strong></div>
+          `;
+        } else {
+          slot.innerHTML = `
+            <div class="slot-square">+</div>
+            <div class="slot-text">Elige un producto</div>
+          `;
+        }
+
+        slotsContainer.appendChild(slot);
+      }
+
+      if (bundle.length > 0) {
+        cartBtn.classList.add('enabled');
+      } else {
+        cartBtn.classList.remove('enabled');
+      }
+    }
+  </script>
+</body>
+</html>
